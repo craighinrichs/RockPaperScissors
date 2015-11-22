@@ -2,82 +2,48 @@
 
 class RockPaperScissors {
 
+	static RPSView view = new RPSView();
+
 	public static void Main (string[] args) {
 
-//		int ROCK = 0;
-//		int PAPER = 1;
-//		int SCISSORS = 2;
-
-		int DRAW = 0;
-		int LOSE = -1;
-		int WIN = 1;
-
-
-		int[,] winTable = new int[3,3] { 
-			// ROCK
-			{ 
-				// ROCK
-				DRAW, 
-				// PAPER
-				LOSE, 
-				// SCISSOR
-				WIN 
-			}, 
-			// PAPER
-			{ // ROCK
-				WIN, 
-				// PAPER
-				DRAW, 
-				// SCISSOR
-				LOSE  
-			}, 
-			// SCISSORS
-			{ // ROCK
-				LOSE, 
-				// PAPER
-				WIN, 
-				// SCISSOR
-				DRAW  
-			}
-		};
-
-		int playerScore = 0;
-		int computerScore = 0;
-		int drawScore = 0;
-
-		Random rand = new Random ();
+		RPSModel.Instance.AddNewPlayer(RPSModel.Instance.LIVEPLAYER);
+		RPSModel.Instance.AddNewPlayer(RPSModel.Instance.COMPUTER_PLAYER,true);
 
 		string answer = "";
 		do {
 
-			Console.WriteLine("-- Rock, Paper, Scissors --");
+			view.DisplayGreeting();
 
-			int computerChoice = rand.Next(0,3);
+			view.DisplayPlayerScores();
 
-			Console.WriteLine("Choose your weapon. Computer has already Choosen!\n\n");
+			RPSModel.Instance.GetPlayer(RPSModel.Instance.COMPUTER_PLAYER).ChooseWeapon();
 
-			Console.WriteLine("Player Score: " + playerScore + " Computer Score: " + computerScore + " Draws: " + drawScore + "\n\n");
+			view.PrintWeaponChoice();
 
-			Console.Write("1] Rock\n2] Paper\n3] Scissors\n\n::--> ");
+			RPSModel.Instance.GetPlayer(RPSModel.Instance.LIVEPLAYER).ChooseWeapon();
 
-			int playerChoice = Convert.ToInt32(Console.ReadLine());
-			playerChoice = playerChoice - 1;
 
-			if(winTable[playerChoice,computerChoice] == DRAW) {
-				Console.WriteLine("It's a Draw");
-				drawScore = drawScore + 1;
-			} else if(winTable[playerChoice,computerChoice] == LOSE) {
-				Console.WriteLine("It's a LOSE");
-				computerScore = computerScore + 1;
-			} else if(winTable[playerChoice,computerChoice] == WIN) {
-				Console.WriteLine("It's a WIN");
-				playerScore = playerScore + 1;
+			Player playerOne = RPSModel.Instance.GetPlayer(RPSModel.Instance.LIVEPLAYER);
+			Player playerTwo = RPSModel.Instance.GetPlayer(RPSModel.Instance.COMPUTER_PLAYER);
+
+			if(playerOne == playerTwo) {
+				view.DisplayDraw();
+				RPSModel.Instance.DrawScore();
+			} else {
+				Player winner = playerOne * playerTwo;
+				if(winner.name.Equals(RPSModel.Instance.LIVEPLAYER)) {
+					view.DisplayWin();
+					RPSModel.Instance.GetPlayer(RPSModel.Instance.LIVEPLAYER).Scored();
+				} else if(winner.name.Equals(RPSModel.Instance.COMPUTER_PLAYER)) {
+					view.DisplayLose();
+					RPSModel.Instance.GetPlayer(RPSModel.Instance.COMPUTER_PLAYER).Scored();
+				}
 			}
 
-			Console.WriteLine("Would you like to play again? [y/n]");
+			view.QuestionPlayAgain();
 			answer = Console.ReadLine();
 
-			Console.Clear();
+			view.ClearScreen();
 
 		} while(answer.ToLower() == "y" || answer.ToLower() == "yes");
 	}
