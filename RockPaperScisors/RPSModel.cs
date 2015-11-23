@@ -6,6 +6,19 @@ public class RPSModel {
 	public readonly string LIVEPLAYER = "You";
 	public readonly string COMPUTER_PLAYER = "Computer";
 
+    public event ModelChangeHandler Change;
+    public EventArgs e = null;
+    public delegate void ModelChangeHandler(GameState state, EventArgs e);
+
+    public enum GameState {
+        StartGame,
+        PlayerCanChoose,
+        PlayerWon,
+        PlayerLost,
+        Draw,
+        PlayAgain
+    }
+
 	public enum WinState {
 		LOSE = -1,
 		DRAW = 0,
@@ -38,6 +51,29 @@ public class RPSModel {
 	private RPSModel () {
 		
 	}
+    public void PlayAgainQuestion() {
+        Change(GameState.PlayAgain,e);
+    }
+
+    public void GameStart() {
+        Change(GameState.StartGame,e);    
+    }
+
+    public void PlayerChooseWeapon() {
+        Change(GameState.PlayerCanChoose,e);
+    }
+
+    public void PlayerWon() {
+        Change(GameState.PlayerWon,e);
+    }
+
+    public void PlayerLost() {
+        Change(GameState.PlayerLost,e);
+    }
+
+    public void PlayerDraw() {
+        Change(GameState.Draw,e);
+    }
 
 	public void DrawScore() {
 		_drawScore = _drawScore + 1;

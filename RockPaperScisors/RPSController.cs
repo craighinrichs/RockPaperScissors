@@ -4,9 +4,10 @@
 public class RPSController {
 
     private RPSView view;
-
     public RPSController (RPSView view) {
         this.view = view;
+        // just to suppress the warning
+        this.view.ClearScreen();
     }
 
     public void StartGame() {
@@ -23,13 +24,11 @@ public class RPSController {
         string answer = "";
         do {
 
-            view.DisplayGreeting();
-
-            view.DisplayPlayerScores();
+            RPSModel.Instance.GameStart();
 
             RPSModel.Instance.GetPlayer(RPSModel.Instance.COMPUTER_PLAYER).ChooseWeapon();
 
-            view.PrintWeaponChoice();
+            RPSModel.Instance.PlayerChooseWeapon();
 
             RPSModel.Instance.GetPlayer(RPSModel.Instance.LIVEPLAYER).ChooseWeapon();
 
@@ -38,24 +37,22 @@ public class RPSController {
             Player playerTwo = RPSModel.Instance.GetPlayer(RPSModel.Instance.COMPUTER_PLAYER);
 
             if(playerOne == playerTwo) {
-                view.DisplayDraw();
+                RPSModel.Instance.PlayerDraw();
                 RPSModel.Instance.DrawScore();
             } else {
                 Player winner = playerOne * playerTwo;
                 if(winner.name.Equals(RPSModel.Instance.LIVEPLAYER)) {
-                    view.DisplayWin();
+                    RPSModel.Instance.PlayerWon();
                     //RPSModel.Instance.GetPlayer(RPSModel.Instance.LIVEPLAYER).Scored();
                 } else if(winner.name.Equals(RPSModel.Instance.COMPUTER_PLAYER)) {
-                    view.DisplayLose();
+                    RPSModel.Instance.PlayerLost();
                     //RPSModel.Instance.GetPlayer(RPSModel.Instance.COMPUTER_PLAYER).Scored();
                 }
                 winner.Scored();
             }
 
-            view.QuestionPlayAgain();
+            RPSModel.Instance.PlayAgainQuestion();
             answer = Console.ReadLine();
-
-            view.ClearScreen();
 
         } while(answer.ToLower() == "y" || answer.ToLower() == "yes");
     }

@@ -3,10 +3,35 @@
 public class RPSView {
 
 	public RPSView () {
-		
+        RPSModel.Instance.Change += new RPSModel.ModelChangeHandler (UpdateView);
 	}
 
+    public void UpdateView(RPSModel.GameState state, EventArgs e) {
+        switch(state) {
+        case RPSModel.GameState.StartGame:
+            DisplayGreeting();
+            DisplayPlayerScores();
+            break;
+        case RPSModel.GameState.Draw:
+            DisplayDraw();
+            break;
+        case RPSModel.GameState.PlayerCanChoose:
+            PrintWeaponChoice();
+            break;
+        case RPSModel.GameState.PlayerLost:
+            DisplayLose();
+            break;
+        case RPSModel.GameState.PlayerWon:
+            DisplayWin();
+            break;
+        case RPSModel.GameState.PlayAgain:
+            QuestionPlayAgain();
+            break;
+        }
+    }
+
 	public void DisplayGreeting() {
+        ClearScreen();
 		Console.WriteLine("-- Rock, Paper, Scissors --");
 	}
 
