@@ -49,8 +49,9 @@ public class RPSModel {
 	}
 
 	private RPSModel () {
-		
+        
 	}
+
     public void PlayAgainQuestion() {
         Change(GameState.PlayAgain,e);
     }
